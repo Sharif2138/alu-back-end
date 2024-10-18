@@ -60,15 +60,21 @@ def get_employee_todo_list(employee_id):
     todos_data = todos_response.json()
 
     # Step 3: Calculate the number of completed tasks and total tasks
-    total_tasks = len(todos_data)
-    completed_tasks = [task for task in todos_data if task.get('completed')]
-    number_of_done_tasks = len(completed_tasks)
+    total_tasks = len(todos_data)  # Total number of tasks
+    completed_tasks = [task for task in todos_data if task.get('completed', False)]
+    number_of_done_tasks = len(completed_tasks)  # Number of completed tasks
 
     # Step 4: Display the output in the specified format
+    # Make sure the first line matches the exact required format
     print(f"Employee {employee_name} is done with tasks"
           f"({number_of_done_tasks}/{total_tasks}):")
-    for task in completed_tasks:
-        print(f"\t {task.get('title')}")
+    
+    # Step 5: Print each completed task title, indented with a tab character
+    if completed_tasks:
+        for task in completed_tasks:
+            print(f"\t {task.get('title')}")
+    else:
+        print("No completed tasks found.")
 
 
 if __name__ == "__main__":
