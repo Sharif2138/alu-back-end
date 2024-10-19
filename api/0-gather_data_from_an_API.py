@@ -32,4 +32,3 @@ if __name__ == "__main__":
           f"({total_done_tasks}/{total_tasks}):")
     for task in done_tasks:
         print(f"\t {task['title']}")
-
