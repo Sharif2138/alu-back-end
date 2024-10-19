@@ -25,4 +25,3 @@ if __name__ == "__main__":
 
     with open("todo_all_employees.json", "w") as file:
         json.dump(dict_users_tasks, file)
-        
