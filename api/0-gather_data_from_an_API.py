@@ -35,31 +35,3 @@ def main():
         sys.exit(1)
         
     EMPLOYEE_ID = int(EMPLOYEE_ID)
-
-    try:
-        # Get the employee's name
-        employee_name = fetch_employee_name(API_URL, EMPLOYEE_ID)
-        
-        # Get the list of tasks for the employee
-        todos = fetch_employee_todos(API_URL, EMPLOYEE_ID)
-        
-        if not todos:
-            print(f"No TODO tasks found for employee ID {EMPLOYEE_ID}.")
-            sys.exit(1)
-
-        # Calculate the number of completed tasks
-        total_tasks = len(todos)
-        completed_tasks = [task for task in todos if task["completed"]]
-        number_of_done_tasks = len(completed_tasks)
-
-        # Print the output in the required format
-        print(f"Employee {employee_name} is done with tasks({number_of_done_tasks}/{total_tasks}):")
-        for task in completed_tasks:
-            print(f"\t {task['title']}")
-
-    except requests.exceptions.RequestException as e:
-        print(f"NetworkError: {e}")
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main()
