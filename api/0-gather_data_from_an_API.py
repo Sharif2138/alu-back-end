@@ -20,10 +20,7 @@ if __name__ == "__main__":
             sys.exit(1)
 
         user_data = user_response.json()
-        employee_name = user_data["name"].strip()  # Strip whitespace
-
-        # Debug: Print the employee name length and content
-        print(f"Debug: Employee name length = {len(employee_name)}, content = '{employee_name}'")
+        employee_name = user_data["name"]
 
         # Get the TODO list for the employee
         todos_response = requests.get(
