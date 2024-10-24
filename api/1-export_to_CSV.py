@@ -8,7 +8,6 @@ import requests
 from sys import argv
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     uid = argv[1]
     url = "https://jsonplaceholder.typicode.com/users/{}".format(uid)
     user = requests.get(url, verify=False).json()
