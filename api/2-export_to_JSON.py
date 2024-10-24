@@ -1,37 +1,45 @@
 #!/usr/bin/python3
-"""Script to use a REST API for a given employee ID, returns
-information about his/her TODO list progress and export in JSON"""
+'''
+Exports user tasks to a JSON file in the specified format.
+'''
+
 import json
 import requests
 import sys
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print(f"UsageError: python3 {__file__} employee_id(int)")
+        print("Usage: ./2-export_to_JSON.py <USER_ID>")
         sys.exit(1)
 
-    API_URL = "https://jsonplaceholder.typicode.com"
-    EMPLOYEE_ID = sys.argv[1]
+    uid = sys.argv[1]  # User ID from command-line argument
 
-    response = requests.get(
-        f"{API_URL}/users/{EMPLOYEE_ID}/todos",
-        params={"_expand": "user"}
-    )
-    data = response.json()
-
-    if not len(data):
-        print("RequestError:", 404)
+    # Fetch user data
+    user_url = f"https://jsonplaceholder.typicode.com/users/{uid}"
+    user_response = requests.get(user_url, verify=False)
+    if user_response.status_code != 200:
+        print(f"User with ID {uid} not found.")
         sys.exit(1)
 
-    user_tasks = {EMPLOYEE_ID: []}
-    for task in data:
-        task_dict = {
-            "task": task["title"],
-            "completed": task["completed"],
-            "username": task["user"]["username"]
-        }
-        user_tasks[EMPLOYEE_ID].append(task_dict)
+    user = user_response.json()
+    username = user.get('username')
 
-    with open(f"{EMPLOYEE_ID}.json", "w") as file:
-        json.dump(user_tasks, file)
+    # Fetch tasks for the user
+    tasks_url = f"https://jsonplaceholder.typicode.com/todos?userId={uid}"
+    tasks_response = requests.get(tasks_url, verify=False)
+    if tasks_response.status_code != 200:
+        print("Could not fetch tasks for the user.")
+        sys.exit(1)
+
+    tasks = tasks_response.json()
+
+    # Format the data
+    tasks_list = [{"task": task["title"], "username": username, "completed": task["completed"]} for task in tasks]
+    data = {str(uid): tasks_list}  # Ensure user ID is a string in the JSON output
+
+    # Export to JSON file
+    filename = f"{uid}.json"
+    with open(filename, 'w') as json_file:
+        json.dump(data, json_file)
+
+    print(f"Data has been exported to {filename}")
